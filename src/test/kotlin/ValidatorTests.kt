@@ -9,17 +9,14 @@ import kotlin.test.assertTrue
 class ValidatorTests {
     private val testDefinition = """
         validator {
-            step "foo": get("foo") == 1 or get("bar") == 2 and get("baz") == 3 {
-                when valid: "Correct!";
-                when invalid: "Incorrect!";
-            }
+            step "foo": (get("foo") == 1 or get("bar") == 2 or get("bar") == 3) or (get("baz") == 3 or get("baz") is null) -> "Invalid!";
         }
     """.trimIndent()
 
     private val testObject = mapOf(
         Pair("foo", 1),
         Pair("bar", 2),
-        Pair("baz", 4)
+        Pair("baz", null)
     )
 
     @Test

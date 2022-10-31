@@ -7,8 +7,10 @@ options {
 validator: VALIDATOR VALIDATOR_LPAREN steps VALIDATOR_RPAREN EOF;
 steps: STEP stepName STEP_START_EXPR expressions (messages | STEP_END_EXPR)?;
 stepName: STEP_STRING;
-expressions: expression (EXPR_COMPOSITION_OR expression)*;
-expression: atomicExpression (EXPR_COMPOSITION_AND atomicExpression)*;
+expressions: expression expressionsRest*;
+expressionsRest: EXPR_COMPOSITION_OR expression;
+expression: atomicExpression expressionRest*;
+expressionRest: EXPR_COMPOSITION_AND atomicExpression;
 atomicExpression
     : EXPR_GET EXPR_PATH_LPAREN path EXPR_PATH_RPAREN operations
     | EXPR_PATH_LPAREN expressions EXPR_PATH_RPAREN

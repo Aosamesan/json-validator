@@ -48,6 +48,16 @@ public interface ValidatorParserListener extends ParseTreeListener {
 	 */
 	void exitExpressions(ValidatorParser.ExpressionsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ValidatorParser#expressionsRest}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionsRest(ValidatorParser.ExpressionsRestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ValidatorParser#expressionsRest}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionsRest(ValidatorParser.ExpressionsRestContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ValidatorParser#expression}.
 	 * @param ctx the parse tree
 	 */
@@ -57,6 +67,16 @@ public interface ValidatorParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpression(ValidatorParser.ExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ValidatorParser#expressionRest}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionRest(ValidatorParser.ExpressionRestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ValidatorParser#expressionRest}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionRest(ValidatorParser.ExpressionRestContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ValidatorParser#atomicExpression}.
 	 * @param ctx the parse tree

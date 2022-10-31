@@ -4,7 +4,7 @@ import parser.IBuilder
 import parser.model.exceptions.BuilderException
 
 class ResultMessage private constructor(
-    val whenInvalid: String,
+    val whenInvalid: String?,
     val whenValid: String?
 ) {
     class Builder : IBuilder<ResultMessage> {
@@ -12,19 +12,23 @@ class ResultMessage private constructor(
         var whenValid: String? = null
 
         override fun build(): ResultMessage {
-            if (whenInvalid == null) {
-                throw BuilderException("ResultMessageBuilder", "'whenInvalid' must be set")
-            }
-            return ResultMessage(whenInvalid!!, whenValid)
+            return ResultMessage(whenInvalid, whenValid)
         }
     }
 
     override fun toString(): String {
-        return """
-            {
-                "whenInvalid": $whenInvalid,
-                "whenValid": $whenValid
+        return """{"whenInvalid": ${
+            if (whenInvalid == null) {
+                "null"
+            } else {
+                "\"$whenInvalid\""
             }
-        """.trimIndent()
+        },"whenValid": ${
+            if (whenValid == null) {
+                "null"
+            } else {
+                "\"$whenValid\""
+            }
+        }}"""
     }
 }

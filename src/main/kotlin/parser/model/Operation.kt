@@ -16,6 +16,20 @@ class Operation private constructor(
     ) {
         constructor(predicate: () -> Boolean): this(predicate().toTernaryValidity())
         constructor(boolean: Boolean): this(boolean.toTernaryValidity())
+
+        operator fun plus(other: Result): Result {
+            return Result(
+                validity + other.validity,
+                errorMessage + other.errorMessage
+            )
+        }
+
+        operator fun times(other: Result): Result {
+            return Result(
+                validity * other.validity,
+                errorMessage + other.errorMessage
+            )
+        }
     }
 
     class Builder : IBuilder<Operation> {
@@ -42,12 +56,6 @@ class Operation private constructor(
     }
 
     override fun toString(): String {
-        return """
-            {
-                "ignoreCase": $ignoreCase,
-                "negate": $negate,
-                "operation": "$op"
-            }
-        """.trimIndent()
+        return """{"ignoreCase": $ignoreCase,"negate": $negate,"operation": "$op"}"""
     }
 }

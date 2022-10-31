@@ -35,11 +35,23 @@ public interface ValidatorParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpressions(ValidatorParser.ExpressionsContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ValidatorParser#expressionsRest}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionsRest(ValidatorParser.ExpressionsRestContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ValidatorParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExpression(ValidatorParser.ExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidatorParser#expressionRest}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionRest(ValidatorParser.ExpressionRestContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ValidatorParser#atomicExpression}.
 	 * @param ctx the parse tree

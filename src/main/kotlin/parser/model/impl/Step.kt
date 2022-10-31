@@ -54,12 +54,6 @@ class Step private constructor(
     }
 
     override fun toString(): String {
-        return """
-            {
-                "stepName": "$stepName",
-                "expressions": $expressions,
-                "resultMessage": $resultMessage
-            }
-        """.trimIndent()
+        return """{"stepName": "$stepName", "expressions": $expressions, "resultMessage": $resultMessage}"""
     }
 }

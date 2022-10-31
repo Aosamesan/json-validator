@@ -43,15 +43,17 @@ class Validator private constructor(
 
     override fun execute(root: Any?, dataFinder: IDataFinder): Result {
         return steps.map { it.execute(root, dataFinder) }
-            .map { Result(it.validity, mapOf(Pair(it.stepName, it.message))) }
+            .map {
+                if (it.message != null) {
+                    Result(it.validity, mapOf(Pair(it.stepName, it.message)))
+                } else {
+                    Result(it.validity, emptyMap())
+                }
+            }
             .reduce { left, right -> left + right }
     }
 
     override fun toString(): String {
-        return """
-            {
-                "steps": [${steps.joinToString(",") { it.toString() }}]
-            }
-        """.trimIndent()
+        return """{"steps": [${steps.joinToString(",") { it.toString() }}]}"""
     }
 }

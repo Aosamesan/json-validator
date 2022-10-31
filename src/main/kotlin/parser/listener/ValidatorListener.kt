@@ -1,14 +1,13 @@
 package parser.listener
 
+import parser.IBuilder
 import parser.ValidatorParser
 import parser.ValidatorParserBaseListener
 import parser.argument.ArgumentBuilder
+import parser.model.IExpression
 import parser.model.Operation
 import parser.model.ResultMessage
-import parser.model.impl.Expression
-import parser.model.impl.Operations
-import parser.model.impl.Step
-import parser.model.impl.Validator
+import parser.model.impl.*
 import java.util.LinkedList
 import java.util.Stack
 
@@ -16,8 +15,7 @@ class ValidatorListener : ValidatorParserBaseListener() {
     private val argumentBuilder = ArgumentBuilder()
     private val operationBuilderStack = Stack<Operation.Builder>()
     private val expressionBuilderStack = Stack<Expression.Builder>()
-    private val expressionLogicalAndBuilderQueue = LinkedList<Expression.Expressions.Builder>()
-    private val expressionLogicalOrBuilderQueue = LinkedList<Expression.Expressions.Builder>()
+    private val expressionStack = Stack<IExpression>()
     private val messageBuilderStack = Stack<ResultMessage.Builder>()
     private val stepBuilderQueue = LinkedList<Step.Builder>()
     private val validatorBuilder = Validator.Builder()
@@ -36,6 +34,7 @@ class ValidatorListener : ValidatorParserBaseListener() {
         val builder = stepBuilderQueue.poll()
         val messageBuilder = messageBuilderStack.pop()
         builder.resultMessage = messageBuilder.build()
+        builder.expressions = expressionStack.pop()
         validatorBuilder.addStep(builder.build())
     }
 
@@ -62,35 +61,30 @@ class ValidatorListener : ValidatorParserBaseListener() {
     }
 
     // expressions
-    override fun enterExpressions(ctx: ValidatorParser.ExpressionsContext?) {
-        expressionLogicalOrBuilderQueue
-            .push(Expression.Expressions.Builder(Expression.Expressions.Type.LogicalOr))
-    }
-
-    override fun exitExpressions(ctx: ValidatorParser.ExpressionsContext?) {
-        val lorExpressions = expressionLogicalOrBuilderQueue.poll()
-        stepBuilderQueue.peek().expressions = lorExpressions.build()
+    override fun exitExpressionsRest(ctx: ValidatorParser.ExpressionsRestContext?) {
+        val right = expressionStack.pop()
+        val left = expressionStack.pop()
+        expressionStack.push(left + right)
     }
 
     // expression
-    override fun enterExpression(ctx: ValidatorParser.ExpressionContext?) {
-        expressionLogicalAndBuilderQueue
-            .push(Expression.Expressions.Builder(Expression.Expressions.Type.LogicalAnd))
-    }
-
-    override fun exitExpression(ctx: ValidatorParser.ExpressionContext?) {
-        val landExpressions = expressionLogicalAndBuilderQueue.poll()
-        expressionLogicalOrBuilderQueue.peek().addExpression(landExpressions.build())
+    override fun exitExpressionRest(ctx: ValidatorParser.ExpressionRestContext?) {
+        val right = expressionStack.pop()
+        val left = expressionStack.pop()
+        expressionStack.push(left * right)
     }
 
     // atomic expression
     override fun enterAtomicExpression(ctx: ValidatorParser.AtomicExpressionContext?) {
-        expressionBuilderStack.push(Expression.Builder())
+        if (ctx?.path() != null) {
+            expressionBuilderStack.push(Expression.Builder())
+        }
     }
 
     override fun exitAtomicExpression(ctx: ValidatorParser.AtomicExpressionContext?) {
-        val atomicExpressions = expressionBuilderStack.pop()
-        expressionLogicalAndBuilderQueue.peek().addExpression(atomicExpressions.build())
+        if (ctx?.path() != null) {
+            expressionStack.push(expressionBuilderStack.pop().build())
+        }
     }
 
     // path
