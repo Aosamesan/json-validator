@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class ValidatorTests {
     private val testDefinition = """
         validator {
-            step "foo": (get("foo") == 1 or get("bar") == 2 or get("bar") == 3) or (get("baz") == 3 or get("baz") is null) -> "Invalid!";
+            step "foo": (get("foo") == 1) -> "Invalid!";
         }
     """.trimIndent()
 

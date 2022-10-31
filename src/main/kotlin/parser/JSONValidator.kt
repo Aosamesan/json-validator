@@ -14,5 +14,5 @@ fun createValidator(definition: String): Validator {
     val listener = ValidatorListener()
     val tree = parser.validator()
     ParseTreeWalker.DEFAULT.walk(listener, tree)
-    return listener.getValidator()
+    return listener.build()
 }

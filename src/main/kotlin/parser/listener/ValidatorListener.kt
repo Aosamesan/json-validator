@@ -11,7 +11,7 @@ import parser.model.impl.*
 import java.util.LinkedList
 import java.util.Stack
 
-class ValidatorListener : ValidatorParserBaseListener() {
+class ValidatorListener : ValidatorParserBaseListener(), IBuilder<Validator> {
     private val argumentBuilder = ArgumentBuilder()
     private val operationBuilderStack = Stack<Operation.Builder>()
     private val expressionBuilderStack = Stack<Expression.Builder>()
@@ -20,7 +20,7 @@ class ValidatorListener : ValidatorParserBaseListener() {
     private val stepBuilderQueue = LinkedList<Step.Builder>()
     private val validatorBuilder = Validator.Builder()
 
-    fun getValidator(): Validator {
+    override fun build(): Validator {
         return validatorBuilder.build()
     }
 
